@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Navbar.css";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -8,7 +8,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <h2>University of Maryland</h2>
+        <a href="https://umd.edu/">University of Maryland</a>
       </div>
       <div className="navbar-middle">
         <ul>

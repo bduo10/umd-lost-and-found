@@ -49,9 +49,14 @@
     font-size: 1.5rem;
 }
 
+.navbar a:active {
+    text-decoration: underline;
+}
+
 .navbar li:hover {
     background-color: #b71c1c;
 }
+
 
 .login, .register, .logout{
     background-color: #fff;
