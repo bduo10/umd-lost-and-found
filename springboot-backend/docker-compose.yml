@@ -1,0 +1,16 @@
+services:
+  db:
+    container_name: lost-and-found-postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lost_and_found_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+
+volumes:
+  db:
