@@ -1,9 +1,6 @@
 package com.umd.springbootbackend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -12,7 +9,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    private String title;
+    @Enumerated(EnumType.STRING)
     private ItemType itemType;
     private String content;
     private String author;
@@ -22,12 +19,11 @@ public class Post {
     }
 
     public Post(
-            Integer id, String title,
+            Integer id,
             ItemType itemType,
             String content,
             String author) {
         this.id = id;
-        this.title = title;
         this.itemType = itemType;
         this.content = content;
         this.author = author;
@@ -39,14 +35,6 @@ public class Post {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -65,11 +53,18 @@ public class Post {
         this.author = author;
     }
 
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Post post)) return false;
         return Objects.equals(id, post.id) &&
-                Objects.equals(title, post.title) &&
                 itemType == post.itemType &&
                 Objects.equals(content, post.content) &&
                 Objects.equals(author, post.author);
@@ -77,7 +72,7 @@ public class Post {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, itemType, content, author);
+        return Objects.hash(id, itemType, content, author);
     }
 
 }

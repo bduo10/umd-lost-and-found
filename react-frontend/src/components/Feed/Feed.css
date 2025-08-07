@@ -1,0 +1,25 @@
+.new-post {
+    background-color: #e21833;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.new-post:hover {
+    background-color: #b71c1c;
+}
+
+.feed-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.feed-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}

@@ -29,9 +29,9 @@ public class PostService {
 
    public Post updatePost(Integer id, Post postDetails) {
         Post post = getPostById(id);
-        post.setTitle(postDetails.getTitle());
         post.setContent(postDetails.getContent());
         post.setAuthor(postDetails.getAuthor());
+        post.setItemType(postDetails.getItemType());
         return postRepository.save(post);
    }
 
