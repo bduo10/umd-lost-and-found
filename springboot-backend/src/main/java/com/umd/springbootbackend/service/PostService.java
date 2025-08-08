@@ -3,6 +3,9 @@ package com.umd.springbootbackend.service;
 import com.umd.springbootbackend.model.Post;
 import com.umd.springbootbackend.repo.PostRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +26,15 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
    }
 
-   public Post createPost(Post post) {
+   public Post createPost(Post post, MultipartFile image) {
+        if (image != null && !image.isEmpty()) {
+            try {
+                post.setImage(image.getBytes());
+                post.setImageType(image.getContentType());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store image file", e);
+            }
+        }
         return postRepository.save(post);
    }
 

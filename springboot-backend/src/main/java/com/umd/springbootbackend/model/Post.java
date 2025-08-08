@@ -14,6 +14,10 @@ public class Post {
     private String content;
     private String author;
 
+    private String imageType;
+    @Lob
+    private byte[] image;
+
 
     public Post() {
     }
@@ -60,6 +64,23 @@ public class Post {
     public void setItemType(ItemType itemType) {
         this.itemType = itemType;
     }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
 
     @Override
     public boolean equals(Object o) {

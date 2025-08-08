@@ -4,10 +4,11 @@ import lombok.*;
 public enum ItemType {
     BOOK,
     CLOTHING,
-    ELECTRONIC,
+    ELECTRONICS,
     WATERBOTTLE,
     ACCESSORIES,
     ID,
+    WALLET,
     KEYS,
     BAGS,
     OTHER
