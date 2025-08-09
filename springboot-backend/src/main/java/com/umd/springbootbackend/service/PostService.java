@@ -1,5 +1,4 @@
 package com.umd.springbootbackend.service;
-
 import com.umd.springbootbackend.model.Post;
 import com.umd.springbootbackend.repo.PostRepository;
 import org.springframework.stereotype.Service;

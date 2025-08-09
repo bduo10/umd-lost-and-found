@@ -1,8 +1,10 @@
 package com.umd.springbootbackend.controller;
 
+import com.umd.springbootbackend.model.ItemType;
 import com.umd.springbootbackend.model.Post;
 import com.umd.springbootbackend.service.PostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +32,27 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
-    @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post, @RequestPart MultipartFile imageFile) {
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImageById(@PathVariable Integer id) {
+        Post post = postService.getPostById(id);
+        if (post.getImage() != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(post.getImageType()))
+                    .body(post.getImage());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Post> createPost(
+            @RequestParam("itemType") String itemType,
+            @RequestParam("content") String content,
+            @RequestParam("author") String author,
+            @RequestParam(value="image", required=false) MultipartFile imageFile) {
+        Post post = new Post();
+        post.setItemType(ItemType.valueOf(itemType));
+        post.setContent(content);
+        post.setAuthor(author);
         try {
             Post createdPost = postService.createPost(post, imageFile);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
