@@ -12,6 +12,7 @@ export default function Feed() {
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setIsLoading(true);
             try {
                 const response = await fetch('http://localhost:8080/api/v1/posts/all');
                 if (!response.ok) {
@@ -26,6 +27,7 @@ export default function Feed() {
                 setIsLoading(false);
             }
         };
+
         fetchPosts();
     }, []);
 

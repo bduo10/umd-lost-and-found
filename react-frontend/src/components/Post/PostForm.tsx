@@ -22,17 +22,18 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
         }
 
         try {
+            const formData = new FormData();
+            formData.append('itemType', itemType);
+            formData.append('content', content);
+            formData.append('author', author);
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
             const response = await fetch('http://localhost:8080/api/v1/posts', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    itemType, 
-                    content, 
-                    author 
-                }),
+                body: formData,
             });
+
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -40,7 +41,6 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
 
             const data = await response.json();
             console.log('Post created:', data);
-            // Reset form fields
             setItemType('');
             setContent('');
             setAuthor('');
@@ -98,6 +98,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         <input
                             type="file"
                             id="fileUpload"
+                            onChange={handleImageChange}
                         />
                     </label>
                 </div>

@@ -2,14 +2,14 @@ import './Post.css';
 import type { PostProps } from '../../types/post';
 import { useEffect, useState } from 'react';
 
-export default function Post(
-    post : PostProps) {
+export default function Post(post : PostProps) {
+
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsLoading(true);
         if (post.image) {
+            setIsLoading(true);
             fetch(`http://localhost:8080/api/v1/posts/${post.id}/image`)
                 .then(res => res.blob())
                 .then(blob => {
@@ -23,6 +23,11 @@ export default function Post(
                 .finally(() => {
                     setIsLoading(false);
                 });
+        }
+        return () => {
+            if (imageUrl) {
+                URL.revokeObjectURL(imageUrl);
+            }
         }
     }, [post.id]);
 

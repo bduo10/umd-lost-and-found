@@ -53,7 +53,7 @@ p {
 
 
 .home { 
-    border: solid;
+    border: 5px solid;
     border-radius: 10px;
     margin: 2em 10em;
     padding: 0 2em;

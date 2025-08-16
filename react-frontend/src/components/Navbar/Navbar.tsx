@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
 
-export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+interface NavbarProps {
+  isLoggedIn: boolean;
+  setIsLoggedIn?: (isLoggedIn: boolean) => void;
+}
+
+export default function Navbar({ isLoggedIn, setIsLoggedIn }: NavbarProps) {
 
   return (
     <nav className="navbar">
@@ -18,9 +22,6 @@ export default function Navbar() {
           <li>
             <NavLink to="/feed">Feed</NavLink>
           </li>
-          <li>
-            <NavLink to="/contact">Contact</NavLink>
-          </li>
         </ul>
       </div>
       {isLoggedIn ? (
@@ -30,8 +31,8 @@ export default function Navbar() {
         </div>
       ) : (
         <div className="navbar-right">
-          <button className="login" onClick={() => setIsLoggedIn(true)}>Login</button>
-          <button className="register">Register</button>
+          <NavLink to="/login" className="login">Login</NavLink>
+          <NavLink to="/register" className="register">Register</NavLink>
         </div>
       )}
     </nav>
