@@ -26,6 +26,7 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    /*
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Integer id) {
         Post post = postService.getPostById(id);
@@ -42,19 +43,19 @@ public class PostController {
         }
         return ResponseEntity.notFound().build();
     }
+    */ 
 
     @PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Post> createPost(
             @RequestParam("itemType") String itemType,
             @RequestParam("content") String content,
-            @RequestParam("author") String author,
+            @RequestParam("userId") Integer userId,
             @RequestParam(value="image", required=false) MultipartFile imageFile) {
         Post post = new Post();
         post.setItemType(ItemType.valueOf(itemType));
         post.setContent(content);
-        post.setAuthor(author);
         try {
-            Post createdPost = postService.createPost(post, imageFile);
+            Post createdPost = postService.createPost(post, userId, imageFile);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -62,9 +63,19 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Integer id, @RequestBody Post postDetails) {
-        Post updatedPost = postService.updatePost(id, postDetails);
-        return ResponseEntity.ok(updatedPost);
+    public ResponseEntity<Post> updatePost(
+        @PathVariable Integer id, 
+        @RequestBody Integer userId,
+        @RequestBody Post postDetails) {
+        try {
+            if (!postService.isPostOwner(id, userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            Post updatedPost = postService.updatePost(id, postDetails, userId);
+            return ResponseEntity.ok(updatedPost);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name="posts")
 public class Post {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -12,7 +13,9 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private ItemType itemType;
     private String content;
-    private String author;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 
     private String imageType;
     @Lob
@@ -26,11 +29,11 @@ public class Post {
             Integer id,
             ItemType itemType,
             String content,
-            String author) {
+            User user) {
         this.id = id;
         this.itemType = itemType;
         this.content = content;
-        this.author = author;
+        this.user = user;
     }
 
     public Integer getId() {
@@ -49,12 +52,12 @@ public class Post {
         this.content = content;
     }
 
-    public String getAuthor() {
-        return author;
+    public User getUser() {
+        return user;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public ItemType getItemType() {
@@ -88,12 +91,12 @@ public class Post {
         return Objects.equals(id, post.id) &&
                 itemType == post.itemType &&
                 Objects.equals(content, post.content) &&
-                Objects.equals(author, post.author);
+                Objects.equals(user, post.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, itemType, content, author);
+        return Objects.hash(id, itemType, content, user);
     }
 
 }
