@@ -6,6 +6,7 @@ import com.umd.springbootbackend.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,16 +27,39 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Integer userId) {
+        try {
+            List<Post> posts = postService.getPostsByUserId(userId);
+            return ResponseEntity.ok(posts);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/type/{itemType}")
+    public ResponseEntity<List<Post>> getPostsByItemType(@PathVariable String itemType) {
+        try { 
+            List<Post> posts = postService.getPostsByItemType(itemType);
+            return ResponseEntity.ok(posts);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     /*
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Integer id) {
         Post post = postService.getPostById(id);
         return ResponseEntity.ok(post);
     }
+    */
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getImageById(@PathVariable Integer id) {
-        Post post = postService.getPostById(id);
+    public ResponseEntity<byte[]> getImageById(
+        @PathVariable Integer id,
+        @PathVariable Integer userId) {
+        Post post = postService.getPostById(id, userId);
         if (post.getImage() != null) {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(post.getImageType()))
@@ -43,7 +67,6 @@ public class PostController {
         }
         return ResponseEntity.notFound().build();
     }
-    */ 
 
     @PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Post> createPost(
@@ -77,6 +100,30 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Post> updatePostWithImage(
+        @PathVariable Integer id,
+        @RequestBody Integer userId, 
+        @RequestParam("itemType") String itemType,
+        @RequestParam("content") String content,
+        @RequestParam(value="image", required=false) MultipartFile imageFile) {
+        
+        try {
+            if (!postService.isPostOwner(id, userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            Post postDetails = new Post();
+            postDetails.setItemType(ItemType.valueOf(itemType));
+            postDetails.setContent(content);
+            Post updatedPost = postService.updatePostWithImage(id, postDetails, userId, imageFile);
+            return ResponseEntity.ok(updatedPost);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    } 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
