@@ -15,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String userName;
+    private String username;
     @Column(unique = true)
     private String email;
     @Column(nullable = false)
@@ -27,14 +27,14 @@ public class User {
     @Column(name = "verification_code")
     private String verificationCode;
     @Column(name = "verification_expiration")
-    private LocalDateTime verificationExpiration;
+    private LocalDateTime verificationCodeExpiresAt;
     private boolean enabled;
 
     public User() {}
 
-    public User(Integer id, String userName, String email, String password) {
+    public User(Integer id, String username, String email, String password) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
