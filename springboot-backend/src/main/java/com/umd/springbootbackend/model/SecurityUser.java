@@ -18,7 +18,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "Student"); // No roles or authorities for simplicity
+        return List.of(); // No roles or authorities for simplicity
     }
 
     @Override

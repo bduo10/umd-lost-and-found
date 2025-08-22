@@ -10,15 +10,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
     @Autowired
-    private JavaMailSender mailSender;
+    private JavaMailSender emailSender;
 
     public void sendVerificationEmail(String to, String subject, String body) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(body, false);
+
+        emailSender.send(mimeMessage);
     }
 
 }
