@@ -108,7 +108,7 @@ public class AuthenticationService {
 
     public void sendVerificationEmail(User user) {
         String subject = "Account verification";
-        String verificationCode = "VERIFICATION_CODE" + user.getVerificationCode();
+        String verificationCode = "VERIFICATION_CODE " + user.getVerificationCode();
         String body = "Please verify your account using the following code: " + verificationCode +
                 "\nThis code is valid for 10 minutes.";
         try {
