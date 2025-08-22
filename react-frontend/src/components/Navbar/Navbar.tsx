@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 interface NavbarProps {
   isLoggedIn: boolean;
-  setIsLoggedIn?: (isLoggedIn: boolean) => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
 export default function Navbar({ isLoggedIn, setIsLoggedIn }: NavbarProps) {
@@ -31,8 +31,14 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }: NavbarProps) {
         </div>
       ) : (
         <div className="navbar-right">
-          <NavLink to="/login" className="login">Login</NavLink>
-          <NavLink to="/register" className="register">Register</NavLink>
+          <ul>
+            <li>
+              <NavLink to="/login" className="login">Login</NavLink>
+            </li>
+            <li>
+              <NavLink to="/register" className="register">Register</NavLink>
+            </li>
+          </ul>
         </div>
       )}
     </nav>

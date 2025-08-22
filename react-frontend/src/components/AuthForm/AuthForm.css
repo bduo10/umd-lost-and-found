@@ -1,0 +1,52 @@
+.login-form-container {
+    max-width: 500px;
+    font-size: 25px;
+    border: 5px solid;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2em auto;
+    padding: 2em;
+}
+
+.register-form-container {
+    max-width: 700px;
+    font-size: 25px;
+    border: 5px solid;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2em auto;
+    padding: 2em;
+}
+
+.login-form-container form,
+.register-form-container form {
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group h2 {
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group {
+    gap: 0.5rem;
+    width: 100%;
+}

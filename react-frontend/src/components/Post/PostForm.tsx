@@ -53,7 +53,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
     return (
         <div className="post-form-container">
             <form className="post-form" onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="post-form-group">
                     <label htmlFor='itemType'>Item Type:</label>
                     <br></br>
                     <select
@@ -74,7 +74,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         <option value="OTHER">OTHER</option>
                     </select>
                 </div>
-                <div className="form-group">
+                <div className="post-form-group">
                     <label htmlFor='content'>Content:</label>
                     <br></br>
                     <textarea
@@ -83,7 +83,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         onChange={(e) => setContent(e.target.value)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="post-form-group">
                     <label htmlFor='author'>Author:</label>
                     <br></br>
                     <input
@@ -93,7 +93,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         onChange={(e) => setAuthor(e.target.value)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="post-form-group">
                     <label htmlFor="fileUpload">
                         <input
                             type="file"

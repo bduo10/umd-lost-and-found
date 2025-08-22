@@ -15,6 +15,7 @@
 }
 
 .navbar-right {
+    height: 100%;
     display: flex; 
     justify-content: flex-end; 
     gap: 10px;
@@ -57,13 +58,16 @@
     background-color: #b71c1c;
 }
 
-
-.login, .register, .logout{
-    background-color: #fff;
-    color: #e21833;
+/*
+navbar-right .login, 
+navbar-right .register, 
+navbar-right .logout{
+    background-color: #e21833;
+    color: #fff;
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-size: 16px;
     border-radius: 10px;
 }
+*/
