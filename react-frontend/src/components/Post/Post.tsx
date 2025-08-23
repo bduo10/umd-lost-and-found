@@ -34,7 +34,7 @@ export default function Post(post : PostProps) {
     return (
         <div className="post">
             <div className="post-header">
-                <h2>{post.author}</h2>
+                <h2>{post.username}</h2>
             </div>
             <div className="post-content">
                 <p><strong>Item Type:</strong> {post.itemType}</p>

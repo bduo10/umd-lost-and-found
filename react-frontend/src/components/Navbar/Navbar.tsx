@@ -1,13 +1,17 @@
-import React, { useState } from "react";
 import "./Navbar.css";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-interface NavbarProps {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
-}
+export default function Navbar() {
+  const { user, isAuthenticated, logout } = useAuth();
 
-export default function Navbar({ isLoggedIn, setIsLoggedIn }: NavbarProps) {
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <nav className="navbar">
@@ -24,10 +28,10 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }: NavbarProps) {
           </li>
         </ul>
       </div>
-      {isLoggedIn ? (
+      {isAuthenticated ? (
         <div className="navbar-right">
-          <span>Welcome, User!</span>
-          <button className="logout" onClick={() => setIsLoggedIn(false)}>Logout</button>
+          <span>Welcome, {user?.username}!</span>
+          <button className="logout" onClick={handleLogout}>Logout</button>
         </div>
       ) : (
         <div className="navbar-right">

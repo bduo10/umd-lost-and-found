@@ -1,11 +1,21 @@
 import { useState } from 'react';
 import './Post.css';
+import { useAuth } from '../../context/AuthContext';
 
-export default function PostForm({ onClose }: { onClose: () => void }) {
+interface PostFormProps {
+    onClose: () => void;
+    onPostCreated?: (newPost: any) => void;
+}
+
+export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
     const [itemType, setItemType] = useState('');
     const [content, setContent] = useState('');
-    const [author, setAuthor] = useState('');
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const { user } = useAuth();
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -16,43 +26,69 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
     const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!itemType || !content || !author) {
+        if (!itemType || !content) {
             alert('All fields are required');
             return;
         }
+
+        if (!user) {
+            setError('You must be logged in to create a post');
+            return;
+        }
+
+        setIsSubmitting(true);
 
         try {
             const formData = new FormData();
             formData.append('itemType', itemType);
             formData.append('content', content);
-            formData.append('author', author);
+            formData.append('username', user.username);
             if (imageFile) {
                 formData.append('image', imageFile);
             }
             const response = await fetch('http://localhost:8080/api/v1/posts', {
                 method: 'POST',
+                credentials: 'include',
                 body: formData,
             });
 
-
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                if (response.status === 401) {
+                    throw new Error('You must be logged in to create a post');
+                }
+                throw new Error('Failed to create post');
             }
 
-            const data = await response.json();
-            console.log('Post created:', data);
+            const newPost = await response.json();
+            console.log('Post created:', newPost);
+
             setItemType('');
             setContent('');
-            setAuthor('');
             setImageFile(null);
-        } catch (error) {
+
+            if (onPostCreated) {
+                onPostCreated(newPost);
+            }
+
+            onClose();
+        } catch (error : any) {
             console.error('Error creating post:', error);
+            setError(error.message || 'Failed to create post');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     return (
         <div className="post-form-container">
+            <button className="close-button" onClick={onClose}>
+                 ← Back to Feed
+            </button>
             <form className="post-form" onSubmit={handleSubmit}>
+                <h2>Create New Post</h2>
+
+                {error && <p className="error">{error}</p>}
+
                 <div className="post-form-group">
                     <label htmlFor='itemType'>Item Type:</label>
                     <br></br>
@@ -60,6 +96,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         id="itemType"
                         value={itemType}
                         onChange={(e) => setItemType(e.target.value)}
+                        required
                     >
                         <option value="">Select an item type</option>
                         <option value="BOOK">BOOK</option>
@@ -81,16 +118,8 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         id="content"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                    />
-                </div>
-                <div className="post-form-group">
-                    <label htmlFor='author'>Author:</label>
-                    <br></br>
-                    <input
-                        type="text"
-                        id="author"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
+                        placeholder="Describe the item, location, date, etc."
+                        required
                     />
                 </div>
                 <div className="post-form-group">
@@ -102,7 +131,9 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                         />
                     </label>
                 </div>
-                <button type="submit">Submit</button>
+                <button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Posting...' : 'Create Post'}
+                </button>
             </form>
         </div>
     );
