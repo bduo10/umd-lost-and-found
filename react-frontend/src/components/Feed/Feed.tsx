@@ -4,6 +4,7 @@ import PostForm from '../Post/PostForm';
 import Post from '../Post/Post';
 import type { PostProps } from '../../types/post';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../../assets/lostfound.jpg';
 
 export default function Feed() {
     const { isAuthenticated } = useAuth();
@@ -12,7 +13,7 @@ export default function Feed() {
     const [error, setError] = useState<string | null>(null);
     const [showPostForm, setShowPostForm] = useState<boolean>(false);
 
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -62,7 +63,7 @@ export default function Feed() {
     return (
         <div className="feed">
             <div className="feed-header">
-                <h1>Lost & Found</h1>
+                <img src={Logo} alt="Lost and Found Logo" className="feed-logo" />
                 <button 
                     className="new-post" 
                     onClick={handleNewPost}

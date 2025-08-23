@@ -15,7 +15,7 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
     const [error, setError] = useState<string | null>(null);
 
     const { user } = useAuth();
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -46,7 +46,7 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
             if (imageFile) {
                 formData.append('image', imageFile);
             }
-            const response = await fetch('http://localhost:8080/api/v1/posts', {
+            const response = await fetch(`${BASE_URL}/api/v1/posts`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formData,

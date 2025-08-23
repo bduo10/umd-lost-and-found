@@ -39,7 +39,7 @@ export default function Register() {
 
     return (
         <div className="register-form-container">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h2>Sign Up</h2>
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
@@ -75,7 +75,7 @@ export default function Register() {
                         disabled={isLoading}
                     />
                 </div>
-                <button type="submit">
+                <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Signing Up...' : 'Sign Up'}
                 </button>
                 {error && <p className="error">{error}</p>}

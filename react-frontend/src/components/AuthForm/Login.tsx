@@ -32,7 +32,7 @@ export default function Login() {
     
     return (
         <div className="login-form-container">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h2>Login</h2>
                 <div className="form-group">
                     <label htmlFor="username">Username:</label>

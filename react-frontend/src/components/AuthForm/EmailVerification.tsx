@@ -35,9 +35,8 @@ export default function EmailVerification({ email, onBack }: EmailVerificationPr
     };
 
     const handleResend = async () => {
-        setIsLoading(true);
+        setIsResending(true);
         setError('');
-        setSuccessMessage('');
 
         try {
             await resendVerificationCode(email);
@@ -53,7 +52,12 @@ export default function EmailVerification({ email, onBack }: EmailVerificationPr
         <div className="login-form-container">
             <form onSubmit={handleSubmit}>
                 <h2>Email Verification</h2>
-                <p>A verification code has been sent to <strong>{email}</strong></p>
+                
+                <div className="verification-info">
+                    <p>A verification code has been sent to:</p>
+                    <strong>{email}</strong>
+                    <p>Please enter the code below to verify your account.</p>
+                </div>
 
                 <div className="form-group">
                     <label htmlFor="verificationCode">Verification Code:</label>
@@ -67,30 +71,30 @@ export default function EmailVerification({ email, onBack }: EmailVerificationPr
                         required
                         disabled={isLoading}
                     />
+                </div>
 
-                    <button type="submit" disabled={isLoading || !verificationCode}>
-                        {isLoading ? 'Verifying...' : 'Verify'}
+                <button type="submit" disabled={isLoading || !verificationCode}>
+                    {isLoading ? 'Verifying...' : 'Verify Email'}
+                </button>
+
+                {error && <p className="error">{error}</p>}
+                
+                <div className="verification-actions">
+                    <button 
+                        type="button"
+                        onClick={handleResend}
+                        disabled={isResending}
+                        className="resend-button"
+                    >
+                        {isResending ? 'Resending...' : 'Resend Code'}
                     </button>
-
-                    {error && <p className="error">{error}</p>}
-                    
-                    <div className="verification-actions">
-                        <button 
-                            type="button"
-                            onClick={handleResend}
-                            disabled={isResending}
-                            className="resend-button"
-                        >
-                            {isResending ? 'Resending...' : 'Resend Code'}
-                        </button>
-                        <button 
-                            type="button"
-                            onClick={onBack}
-                            className="back-button"
-                        >
-                            Back to Sign Up
-                        </button>
-                    </div>
+                    <button 
+                        type="button"
+                        onClick={onBack}
+                        className="back-button"
+                    >
+                        Back to Sign Up
+                    </button>
                 </div>
             </form>
         </div>

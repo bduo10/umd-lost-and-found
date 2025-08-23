@@ -1,52 +1,208 @@
 .login-form-container {
     max-width: 500px;
-    font-size: 25px;
-    border: 5px solid;
+    border: 5px solid #ddd;
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin: 2em auto;
-    padding: 2em;
+    margin: 2rem auto;
+    padding: 3rem;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .register-form-container {
-    max-width: 700px;
-    font-size: 25px;
-    border: 5px solid;
+    max-width: 600px;
+    border: 5px solid #ddd;
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin: 2em auto;
-    padding: 2em;
+    margin: 2rem auto;
+    padding: 3rem;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .login-form-container form,
 .register-form-container form {
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
     width: 100%;
 }
 
-.form-group label {
+.login-form-container h2,
+.register-form-container h2 {
+    text-align: center;
+    margin: 0 0 2rem 0;
+    color: #333;
+    font-size: 2.5rem;
     font-weight: bold;
+    line-height: 1.2;
 }
 
-.form-group h2 {
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.form-group {
+.form-group,
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     width: 100%;
+}
+
+.form-group label,
+.auth-form-group label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.form-group input,
+.auth-form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.auth-form-group input:focus {
+    outline: none;
+    border-color: #e21833;
+    box-shadow: 0 0 0 2px rgba(226, 24, 51, 0.2);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #e21833;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background-color: #b71c1c;
+}
+
+button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.error {
+    color: #e21833;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+}
+
+/* Auth form links */
+.login-form-container p,
+.register-form-container p {
+    text-align: center;
+    margin: 1rem 0 0 0;
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.login-form-container a,
+.register-form-container a {
+    color: #e21833;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.login-form-container a:hover,
+.register-form-container a:hover {
+    color: #b71c1c;
+    text-decoration: underline;
+}
+
+/* Verification form specific styles */
+.verification-info {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #e9ecef;
+}
+
+.verification-info p {
+    margin: 0.5rem 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+.verification-info strong {
+    color: #333;
+    font-size: 1.2rem;
+    display: block;
+    margin: 1rem 0;
+}
+.verification-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.resend-button,
+.back-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.resend-button:hover,
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .login-form-container,
+    .register-form-container {
+        margin: 1rem;
+        padding: 2rem;
+        max-width: 90%;
+    }
+    
+    .login-form-container h2,
+    .register-form-container h2 {
+        font-size: 2rem;
+    }
+    
+    .form-group input,
+    .auth-form-group input {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-form-container,
+    .register-form-container {
+        margin: 0.5rem;
+        padding: 1.5rem;
+    }
+    
+    .login-form-container h2,
+    .register-form-container h2 {
+        font-size: 1.8rem;
+    }
 }

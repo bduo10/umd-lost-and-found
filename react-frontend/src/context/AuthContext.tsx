@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const register = async (userData: RegisterData) => {
         try {
-            const response = await fetch(`${BASE_URL}/auth/register`, {
+            const response = await fetch(`${BASE_URL}/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -106,6 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const response = await fetch(`${BASE_URL}/auth/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ email, code }),
             });
 
@@ -122,9 +123,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const resendVerificationCode = async (email: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/auth/resend-verification`, {
+            const response = await fetch(`${BASE_URL}/auth/resend`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ email }),
             });
 

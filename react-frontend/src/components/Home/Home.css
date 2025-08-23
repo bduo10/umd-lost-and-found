@@ -1,67 +1,93 @@
 .home {
-    border: solid;
+    max-width: 900px;
+    border: 5px solid #ddd;
     border-radius: 10px;
-    margin: 2em 10em;
-    padding: 0 2em;
-}
-
-h1 {
-    margin: 0;
-    font-size: 2.5em;
-    text-align: left;
+    margin: 2rem auto;
+    padding: 3rem;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .home-content {
-    margin: 0;
-    padding: 1em 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2em;
+    gap: 3rem;
 }
 
 .home-text {
-    margin-top: 10px;
     flex: 2;
 }
 
-p {
-    font-size: 1.5em;
+.home-text h1 {
+    margin: 0 0 1.5rem 0;
+    font-size: 2.5rem;
+    text-align: left;
+    color: #333;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.home-text p {
+    font-size: 1.2rem;
     margin: 0;
+    color: #555;
+    line-height: 1.6;
 }
 
 .testudo-image {
     flex: 1;
-    max-width: 250px;
+    max-width: 300px;
     width: 100%;
     height: auto;
     border-radius: 10px;
     object-fit: cover;
-}h1 {
-    margin-bottom: 10px;
-    padding: 0 1em;
-    font-size: 2.5em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
 }
 
-p {
-    font-size: 1.5em;
+.testudo-image:hover {
+    transform: scale(1.02);
 }
 
-.testudo-image {
-    align-items: end;
+/* Responsive design */
+@media (max-width: 768px) {
+    .home {
+        margin: 1rem;
+        padding: 2rem;
+    }
+    
+    .home-content {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .home-text h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+    
+    .home-text p {
+        font-size: 1.1rem;
+    }
+    
+    .testudo-image {
+        max-width: 250px;
+    }
 }
 
-
-.home { 
-    border: 5px solid;
-    border-radius: 10px;
-    margin: 2em 10em;
-    padding: 0 2em;
-}
-
-.home-content {
-    margin: 0;
-    padding: 1em;
-    display: flex;
-    justify-content: space-between;
+@media (max-width: 480px) {
+    .home {
+        margin: 0.5rem;
+        padding: 1.5rem;
+    }
+    
+    .home-text h1 {
+        font-size: 1.8rem;
+    }
+    
+    .home-text p {
+        font-size: 1rem;
+    }
 }
