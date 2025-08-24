@@ -101,13 +101,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    const verifyEmail = async (email: string, code: string) => {
+    const verifyEmail = async (email: string, verificationCode: string) => {
         try {
             const response = await fetch(`${BASE_URL}/auth/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ email, code }),
+                body: JSON.stringify({ email, verificationCode }),
             });
 
             if (!response.ok) {

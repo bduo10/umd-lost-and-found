@@ -24,23 +24,26 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SecurityUser> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<String> register(@RequestBody RegisterUserDto registerUserDto) {
         authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok("user registered successfully: " + user.getUsername());
+        return ResponseEntity.ok("user registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<LoginResponse> authenticate(
+            @RequestBody LoginUserDto loginUserDto,
+            HttpServletResponse response) {
         SecurityUser authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         Cookie jwtCookie = new Cookie("auth-token", jwtToken);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true);
+        jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge((int) jwtService.getExpirationTime() / 1000);
         jwtCookie.setAttribute("SameSite", "Strict");
-        
+
+        response.addCookie(jwtCookie);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
         return ResponseEntity.ok(loginResponse);
     }
@@ -49,7 +52,7 @@ public class AuthenticationController {
     public ResponseEntity<String> logout(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("auth-token", "");
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true);
+        jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
         jwtCookie.setAttribute("SameSite", "Strict");
