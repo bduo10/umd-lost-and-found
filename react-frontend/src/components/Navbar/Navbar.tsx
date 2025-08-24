@@ -32,7 +32,7 @@ export default function Navbar() {
         <div className="navbar-right">
           <ul>
             <li>
-              <NavLink to="/profile" className="profile-link">Welcome {user?.username}!</NavLink>
+              <NavLink to="/profile" className="profile-link">Welcome, {user?.username}!</NavLink>
             </li>
             <li>
               <button 

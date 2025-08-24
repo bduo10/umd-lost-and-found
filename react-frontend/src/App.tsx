@@ -8,6 +8,7 @@ import Register from './components/AuthForm/Register'
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import Profile from './components/Profile/Profile'
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/profile" element={<Profile />} />
 
           <Route path="/login" element={
             <ProtectedRoute requireAuth={false} redirectTo="/"> 
