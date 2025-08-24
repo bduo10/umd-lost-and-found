@@ -15,7 +15,7 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
     const [error, setError] = useState<string | null>(null);
 
     const { user } = useAuth();
-    const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -42,7 +42,6 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
             const formData = new FormData();
             formData.append('itemType', itemType);
             formData.append('content', content);
-            formData.append('username', user.username);
             if (imageFile) {
                 formData.append('image', imageFile);
             }
@@ -51,6 +50,7 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
                 credentials: 'include',
                 body: formData,
             });
+
 
             if (!response.ok) {
                 if (response.status === 401) {

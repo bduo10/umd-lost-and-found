@@ -1,5 +1,6 @@
 package com.umd.springbootbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class Post {
     private String content;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", nullable=false)
+    @JsonBackReference
     private User user;
 
     private String imageType;

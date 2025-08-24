@@ -24,7 +24,7 @@ public class PostService {
         return postRepository.findAll();
    }
 
-   public Post getPostById(Integer id, Integer userId) {
+   public Post getPostById(Integer id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
    }
@@ -47,7 +47,7 @@ public class PostService {
    }
 
    public Post updatePost(Integer id, Post postDetails, Integer userId) {
-        Post post = getPostById(id, userId);
+        Post post = getPostById(id);
         post.setContent(postDetails.getContent());
         post.setItemType(postDetails.getItemType());
         return postRepository.save(post);
@@ -76,7 +76,7 @@ public class PostService {
 
    // Update post with image
    public Post updatePostWithImage(Integer id, Post postDetails, Integer userId, MultipartFile image) {
-        Post post = getPostById(id, userId);
+        Post post = getPostById(id);
         post.setContent(postDetails.getContent());
         post.setItemType(postDetails.getItemType());
         

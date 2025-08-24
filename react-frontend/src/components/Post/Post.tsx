@@ -28,12 +28,15 @@ export default function Post(post: PostProps) {
                 });
         }
         
+    }, [post.id, BASE_URL, post.image]);
+
+    useEffect(() => {
         return () => {
             if (imageUrl) {
                 URL.revokeObjectURL(imageUrl);
             }
         };
-    }, [post.id, imageUrl]);
+    })
 
     return (
         <div className="post" role="article">
