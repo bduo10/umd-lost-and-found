@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const checkAuth = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/auth/me`, {
+            const response = await fetch(`${BASE_URL}/users/me`, {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -51,7 +51,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (response.ok) {
                 const userData = await response.json();
                 setUser(userData);
+                console.log('Auth check successful:', userData);
             } else {
+                console.warn('Auth check failed with status:', response.status);
                 setUser(null);
             }
         } catch (error) {

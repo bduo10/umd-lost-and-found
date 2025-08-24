@@ -30,8 +30,20 @@ export default function Navbar() {
       </div>
       {isAuthenticated ? (
         <div className="navbar-right">
-          <span>Welcome, {user?.username}!</span>
-          <button className="logout" onClick={handleLogout}>Logout</button>
+          <ul>
+            <li>
+              <NavLink to="/profile" className="profile-link">Welcome {user?.username}!</NavLink>
+            </li>
+            <li>
+              <button 
+                className="logout-btn" 
+                onClick={handleLogout}
+                style={{ fontFamily: 'inherit' }}
+              >
+                Logout
+              </button>
+            </li>
+          </ul>
         </div>
       ) : (
         <div className="navbar-right">

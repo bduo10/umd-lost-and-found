@@ -64,19 +64,30 @@ export default function Feed() {
         <div className="feed">
             <div className="feed-header">
                 <img src={Logo} alt="Lost and Found Logo" className="feed-logo" />
-                <button 
-                    className="new-post" 
-                    onClick={handleNewPost}
-                    disabled={!isAuthenticated}
-                >
-                    {isAuthenticated ? 'Create New Post' : 'Login to Post'}
-                </button>
+                {isAuthenticated ? (
+                    <button 
+                        className="new-post authenticated" 
+                        onClick={handleNewPost}
+                    >
+                        Create New Post
+                    </button>
+                ) : (
+                    <div className="auth-prompt">
+                        <p>Want to post a lost or found item?</p>
+                        <button 
+                            className="new-post unauthenticated" 
+                            onClick={handleNewPost}
+                        >
+                            Login to Post
+                        </button>
+                    </div>
+                )}
             </div>
             <div className="feed-content">
                 {isLoading && <p>Loading posts...</p>}
                 {error && <p className="error">{error}</p>}
                 {posts.length == 0 && !isLoading && !error && (
-                    <p>No posts available</p>
+                    <p>No posts available. {isAuthenticated ? 'Be the first to post!' : 'Login to start posting!'}</p>
                 )}
                 {posts.map((post) => (
                     <Post key={post.id} {...post} />
