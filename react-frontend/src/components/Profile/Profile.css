@@ -1,5 +1,5 @@
 .profile {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
 }
@@ -13,6 +13,9 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    /* Constrain profile card width */
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
 }
 
 .profile-header {
@@ -103,6 +106,8 @@
 /* User feed in profile */
 .profile .user-feed {
     margin-top: 2rem;
+    /* Full width for the feed with sidebar */
+    max-width: 100%;
 }
 
 .profile .user-feed .feed-title {
@@ -116,7 +121,14 @@
     margin: 0 0 0.5rem 0;
 }
 
+.profile .user-feed .feed-main {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
 .profile .user-feed .feed-content {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -148,5 +160,11 @@
     
     .profile-email {
         font-size: 1rem;
+    }
+    
+    /* User feed responsive */
+    .profile .user-feed .feed-main {
+        flex-direction: column;
+        gap: 1.5rem;
     }
 }

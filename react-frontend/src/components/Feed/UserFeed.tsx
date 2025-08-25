@@ -2,6 +2,7 @@ import './Feed.css'
 import { useEffect, useState } from 'react';
 import Post from '../Post/Post';
 import type { PostProps } from '../../types/post';
+import FilterSidebar from '../Filter/FilterSidebar';
 
 interface UserFeedProps {
     username: string;
@@ -11,6 +12,8 @@ interface UserFeedProps {
 export default function UserFeed({ username, isCurrentUser }: UserFeedProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [posts, setPosts] = useState<PostProps[]>([]);
+    const [filteredPosts, setFilteredPosts] = useState<PostProps[]>([]);
+    const [selectedItemType, setSelectedItemType] = useState<string>('ALL');
     const [error, setError] = useState<string | null>(null);
 
     const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
@@ -41,6 +44,19 @@ export default function UserFeed({ username, isCurrentUser }: UserFeedProps) {
         }
     }, [username, BASE_URL]);
 
+    // Filter posts when posts or selectedItemType changes
+    useEffect(() => {
+        if (selectedItemType === 'ALL') {
+            setFilteredPosts(posts);
+        } else {
+            setFilteredPosts(posts.filter(post => post.itemType === selectedItemType));
+        }
+    }, [posts, selectedItemType]);
+
+    const handleFilterChange = (itemType: string) => {
+        setSelectedItemType(itemType);
+    };
+
     const handlePostDeleted = (postId: number) => {
         setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
     };
@@ -60,26 +76,36 @@ export default function UserFeed({ username, isCurrentUser }: UserFeedProps) {
                 <div className="feed-title-underline"></div>
             </div>
 
-            <div className="feed-content">
-                {isLoading && <p>Loading posts...</p>}
-                {error && <p className="error">{error}</p>}
-                {posts.length === 0 && !isLoading && !error && (
-                    <p>
-                        {isCurrentUser 
-                            ? 'You haven\'t created any posts yet. Create your first post!' 
-                            : `${username} hasn't posted anything yet.`
-                        }
-                    </p>
-                )}
-                {posts.map((post) => (
-                    <Post 
-                        key={post.id} 
-                        {...post} 
-                        showEditDelete={isCurrentUser}
-                        onPostDeleted={handlePostDeleted}
-                        onPostUpdated={handlePostUpdated}
-                    />
-                ))}
+            <div className="feed-main">
+                <FilterSidebar 
+                    selectedItemType={selectedItemType}
+                    onFilterChange={handleFilterChange}
+                />
+                
+                <div className="feed-content">
+                    {isLoading && <p>Loading posts...</p>}
+                    {error && <p className="error">{error}</p>}
+                    {filteredPosts.length === 0 && !isLoading && !error && (
+                        <p>
+                            {selectedItemType === 'ALL' 
+                                ? (isCurrentUser 
+                                    ? 'You haven\'t created any posts yet. Create your first post!' 
+                                    : `${username} hasn't posted anything yet.`
+                                  )
+                                : `No ${selectedItemType.toLowerCase().replace('waterbottle', 'water bottle')} items found. Try a different filter.`
+                            }
+                        </p>
+                    )}
+                    {filteredPosts.map((post) => (
+                        <Post 
+                            key={post.id} 
+                            {...post} 
+                            showEditDelete={isCurrentUser}
+                            onPostDeleted={handlePostDeleted}
+                            onPostUpdated={handlePostUpdated}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );

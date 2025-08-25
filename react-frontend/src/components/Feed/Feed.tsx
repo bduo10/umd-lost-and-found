@@ -5,11 +5,14 @@ import Post from '../Post/Post';
 import type { PostProps } from '../../types/post';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../assets/lostfound.jpg';
+import FilterSidebar from '../Filter/FilterSidebar';
 
 export default function Feed() {
     const { isAuthenticated } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [posts, setPosts] = useState<PostProps[]>([]);
+    const [filteredPosts, setFilteredPosts] = useState<PostProps[]>([]);
+    const [selectedItemType, setSelectedItemType] = useState<string>('ALL');
     const [error, setError] = useState<string | null>(null);
     const [showPostForm, setShowPostForm] = useState<boolean>(false);
 
@@ -39,6 +42,19 @@ export default function Feed() {
         fetchPosts();
     }, []);
 
+    // Filter posts when posts or selectedItemType changes
+    useEffect(() => {
+        if (selectedItemType === 'ALL') {
+            setFilteredPosts(posts);
+        } else {
+            setFilteredPosts(posts.filter(post => post.itemType === selectedItemType));
+        }
+    }, [posts, selectedItemType]);
+
+    const handleFilterChange = (itemType: string) => {
+        setSelectedItemType(itemType);
+    };
+
     const handlePostCreated = (newPost: PostProps) => {
         setPosts(prevPosts => [newPost, ...prevPosts]);
         setShowPostForm(false);
@@ -61,41 +77,56 @@ export default function Feed() {
     }
 
     return (
-        <div className="feed">
-            <div className="feed-header">
-                <img src={Logo} alt="Lost and Found Logo" className="feed-logo" />
-                {isAuthenticated ? (
-                    <button 
-                        className="new-post authenticated" 
-                        onClick={handleNewPost}
-                    >
-                        Create New Post
-                    </button>
-                ) : (
-                    <div className="auth-prompt">
-                        <p>Want to post a lost or found item?</p>
+        <div className="feed-container">
+            <div className="feed">
+                <div className="feed-header">
+                    <img src={Logo} alt="Lost and Found Logo" className="feed-logo" />
+                    {isAuthenticated ? (
                         <button 
-                            className="new-post unauthenticated" 
+                            className="new-post authenticated" 
                             onClick={handleNewPost}
                         >
-                            Login to Post
+                            Create New Post
                         </button>
+                    ) : (
+                        <div className="auth-prompt">
+                            <p>Want to post a lost or found item?</p>
+                            <button 
+                                className="new-post unauthenticated" 
+                                onClick={handleNewPost}
+                            >
+                                Login to Post
+                            </button>
+                        </div>
+                    )}
+                </div>
+                <div className="feed-title">
+                    <h1>Feed</h1>
+                    <div className="feed-title-underline"></div>
+                </div>
+                
+                <div className="feed-main">
+                    <FilterSidebar 
+                        selectedItemType={selectedItemType}
+                        onFilterChange={handleFilterChange}
+                    />
+                    
+                    <div className="feed-content">
+                        {isLoading && <p>Loading posts...</p>}
+                        {error && <p className="error">{error}</p>}
+                        {filteredPosts.length === 0 && !isLoading && !error && (
+                            <p>
+                                {selectedItemType === 'ALL' 
+                                    ? `No posts available. ${isAuthenticated ? 'Be the first to post!' : 'Login to start posting!'}` 
+                                    : `No ${selectedItemType.toLowerCase().replace('waterbottle', 'water bottle')} items found. Try a different filter.`
+                                }
+                            </p>
+                        )}
+                        {filteredPosts.map((post) => (
+                            <Post key={post.id} {...post} />
+                        ))}
                     </div>
-                )}
-            </div>
-            <div className="feed-title">
-                <h1>Feed</h1>
-                <div className="feed-title-underline"></div>
-            </div>
-            <div className="feed-content">
-                {isLoading && <p>Loading posts...</p>}
-                {error && <p className="error">{error}</p>}
-                {posts.length == 0 && !isLoading && !error && (
-                    <p>No posts available. {isAuthenticated ? 'Be the first to post!' : 'Login to start posting!'}</p>
-                )}
-                {posts.map((post) => (
-                    <Post key={post.id} {...post} />
-                ))}
+                </div>
             </div>
         </div>
     );

@@ -1,7 +1,11 @@
-.feed {
-    max-width: 800px;
+.feed-container {
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
+}
+
+.feed {
+    width: 100%;
 }
 
 .feed-title {
@@ -23,6 +27,19 @@
     margin: 0 auto;
 }
 
+.feed-main {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.feed-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 .feed-header {
     display: flex;
     flex-direction: column;
@@ -34,6 +51,11 @@
     border-radius: 10px;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Constrain feed header width */
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
 }
 
 .feed-logo {
@@ -84,16 +106,7 @@
     font-weight: 500;
 }
 
-.feed-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    max-height: calc(100vh - 300px);
-    overflow-y: auto;
-    padding-right: 0.5rem;
-}
-
-/* Custom scrollbar */
+/* Custom scrollbar for feed content */
 .feed-content::-webkit-scrollbar {
     width: 6px;
 }
@@ -128,4 +141,30 @@
     color: #666;
     font-size: 18px;
     margin: 2rem 0;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .feed-container {
+        padding: 1rem;
+    }
+    
+    .feed-main {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .feed-title h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .feed-container {
+        padding: 0.5rem;
+    }
+    
+    .feed-title h1 {
+        font-size: 1.75rem;
+    }
 }

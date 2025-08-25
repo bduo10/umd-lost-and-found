@@ -1,0 +1,138 @@
+.filter-sidebar {
+    width: 280px;
+    background: white;
+    border: 5px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: fit-content;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    position: sticky;
+    top: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e21833;
+}
+
+.filter-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.filter-option:hover {
+    background-color: #f8f9fa;
+}
+
+.filter-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #e21833;
+    cursor: pointer;
+}
+
+.filter-label {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.clear-filter-btn {
+    width: 100%;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Custom scrollbar for filter sidebar */
+.filter-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filter-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .filter-sidebar {
+        width: 260px;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-sidebar {
+        position: static;
+        width: 100%;
+        max-height: none;
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.5rem;
+    }
+    
+    .filter-option {
+        flex: 1;
+        justify-content: center;
+        padding: 0.75rem 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background-color: white;
+        text-align: center;
+    }
+    
+    .filter-option input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+    
+    .filter-option:hover {
+        background-color: #f0f0f0;
+    }
+}
