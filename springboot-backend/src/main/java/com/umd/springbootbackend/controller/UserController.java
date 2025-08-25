@@ -8,11 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
 
@@ -32,6 +33,20 @@ public class UserController {
                 currUser.getId(),
                 currUser.getEmail(),
                 currUser.getUsername()
+        );
+        return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        UserDto userDto = new UserDto(
+                user.getId(),
+                user.getEmail(),
+                user.getUsername()
         );
         return ResponseEntity.ok(userDto);
     }

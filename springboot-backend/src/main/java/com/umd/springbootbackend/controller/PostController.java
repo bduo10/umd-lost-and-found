@@ -1,5 +1,6 @@
 package com.umd.springbootbackend.controller;
 
+import com.umd.springbootbackend.dto.PostDto;
 import com.umd.springbootbackend.model.ItemType;
 import com.umd.springbootbackend.model.Post;
 import com.umd.springbootbackend.model.SecurityUser;
@@ -39,8 +40,8 @@ public class PostController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Post>> getAllPosts() {
-        List<Post> posts = postService.getAllPosts();
+    public ResponseEntity<List<PostDto>> getAllPosts() {
+        List<PostDto> posts = postService.getAllPosts();
         return ResponseEntity.ok(posts);
     }
 

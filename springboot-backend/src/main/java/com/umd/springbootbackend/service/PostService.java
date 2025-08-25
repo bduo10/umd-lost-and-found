@@ -1,4 +1,5 @@
 package com.umd.springbootbackend.service;
+import com.umd.springbootbackend.dto.PostDto;
 import com.umd.springbootbackend.model.ItemType;
 import com.umd.springbootbackend.model.Post;
 import com.umd.springbootbackend.model.User;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -20,8 +22,17 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
-   public List<Post> getAllPosts() {
-        return postRepository.findAll();
+   public List<PostDto> getAllPosts() {
+        return postRepository.findAll()
+                .stream()
+                .map(post -> new PostDto(
+                        post.getId(),
+                        post.getUser().getUsername(),
+                        post.getItemType().name(),
+                        post.getContent(),
+                        post.getImage() != null && post.getImage().length > 0
+                ))
+                .collect(Collectors.toList());
    }
 
    public Post getPostById(Integer id) {

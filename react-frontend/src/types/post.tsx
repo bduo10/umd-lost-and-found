@@ -1,12 +1,7 @@
 export interface PostProps {
     id: number;
+    username?: string;
     itemType: string;
     content: string;
-    username?: string; // Make optional since backend might not provide this
-    user?: {
-        id: number;
-        username: string;
-        email: string;
-    };
-    image?: boolean;
+    hasImage?: boolean;
 }

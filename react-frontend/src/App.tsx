@@ -1,14 +1,31 @@
-import { useState } from 'react'
 import './App.css'
 import Home from './components/Home/Home'
 import Navbar from './components/Navbar/Navbar'
 import Feed from './components/Feed/Feed'
 import Login from './components/AuthForm/Login'
 import Register from './components/AuthForm/Register'
-import { Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
+import { Routes, Route, useParams } from 'react-router-dom'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import Profile from './components/Profile/Profile'
+
+// Wrapper component to handle current user profile route
+function CurrentUserProfile() {
+  const { user } = useAuth();
+  if (!user) {
+    return <div>Please log in to view your profile</div>;
+  }
+  return <Profile username={user.username} />;
+}
+
+// Wrapper component to handle dynamic username route
+function ProfileWrapper() {
+  const { username } = useParams<{ username: string }>();
+  if (!username) {
+    return <div>Invalid profile URL</div>;
+  }
+  return <Profile username={username} />;
+}
 
 function App() {
 
@@ -20,7 +37,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/feed" element={<Feed />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={
+            <ProtectedRoute requireAuth={true} redirectTo="/login">
+              <CurrentUserProfile />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile/:username" element={<ProfileWrapper />} />
 
           <Route path="/login" element={
             <ProtectedRoute requireAuth={false} redirectTo="/"> 

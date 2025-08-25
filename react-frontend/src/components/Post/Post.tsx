@@ -1,34 +1,25 @@
 import './Post.css';
 import type { PostProps } from '../../types/post';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Post(post: PostProps) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    console.log('Full post object:', post); // Debug log
+    const navigate = useNavigate();
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-    const getUserInitial = () => {
-        // Handle both formats: direct username or user.username
-        const username = post.username || post.user?.username;
-        console.log('Username:', username); // Debug log
-        return username ? username.charAt(0).toUpperCase() : 'U';
-    };
-
-    const getUsername = () => {
-        return post.username || post.user?.username || 'Unknown User';
-    };
-
     const handleUserClick = () => {
-        // TODO: Navigate to user profile
-        const username = getUsername();
-        console.log(`Navigate to profile of ${username}`);
+        navigate(`/profile/${post.username}`);
+    };
+
+    const getUserInitial = () => {
+        return post.username ? post.username.charAt(0).toUpperCase() : 'U';
     };
 
     useEffect(() => {
-        if (post.image) {
+        if (post.hasImage) {
             setIsLoading(true);
             fetch(`${BASE_URL}/api/v1/posts/${post.id}/image`, {
                 credentials: 'include',
@@ -46,8 +37,8 @@ export default function Post(post: PostProps) {
                     setIsLoading(false);
                 });
         }
-        
-    }, [post.id, BASE_URL, post.image]);
+
+    }, [post.id, BASE_URL, post.hasImage]);
 
     useEffect(() => {
         return () => {
@@ -64,7 +55,7 @@ export default function Post(post: PostProps) {
                     <div className="post-user-avatar">
                         {getUserInitial()}
                     </div>
-                    <h3 className="post-username">{getUsername()}</h3>
+                    <h3 className="post-username">{post.username}</h3>
                 </div>
             </div>
 
@@ -78,14 +69,14 @@ export default function Post(post: PostProps) {
                 <div className="post-image-container">
                     <img 
                         src={imageUrl}
-                        alt={`${post.itemType} posted by ${getUsername()}`}
+                        alt={`${post.itemType} posted by ${post.username}`}
                         className="post-image"
                         loading="lazy"
                     />
                 </div>
             )}
             
-            {post.image && !imageUrl && !isLoading && (
+            {post.hasImage && !imageUrl && !isLoading && (
                 <div className="image-error" role="alert">
                     <p>Failed to load image</p>
                 </div>
