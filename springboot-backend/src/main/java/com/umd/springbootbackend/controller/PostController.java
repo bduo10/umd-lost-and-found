@@ -45,10 +45,10 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Integer userId) {
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<PostDto>> getPostsByUserId(@PathVariable String username) {
         try {
-            List<Post> posts = postService.getPostsByUserId(userId);
+            List<PostDto> posts = postService.getPostsByUsername(username);
             return ResponseEntity.ok(posts);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

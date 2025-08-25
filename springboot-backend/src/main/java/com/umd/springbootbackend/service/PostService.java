@@ -35,6 +35,20 @@ public class PostService {
                 .collect(Collectors.toList());
    }
 
+   public List<PostDto> getPostsByUsername(String username) {
+        return postRepository.findAll()
+                .stream()
+                .filter(post -> post.getUser().getUsername().equals(username))
+                .map(post -> new PostDto(
+                        post.getId(),
+                        post.getUser().getUsername(),
+                        post.getItemType().name(),
+                        post.getContent(),
+                        post.getImage() != null && post.getImage().length > 0
+                ))
+                .collect(Collectors.toList());
+   }
+
    public Post getPostById(Integer id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
@@ -69,10 +83,17 @@ public class PostService {
    }
 
    // Get posts by user ID
-   public List<Post> getPostsByUserId(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        return postRepository.findByUser(user);
+   public List<PostDto> getPostsByUserId(Integer userId) {
+        return postRepository.findById(userId)
+                .stream()
+                .map(post -> new PostDto(
+                        post.getId(),
+                        post.getUser().getUsername(),
+                        post.getItemType().name(),
+                        post.getContent(),
+                        post.getImage() != null && post.getImage().length > 0
+                ))
+                .collect(Collectors.toList());
    }
 
    // Get posts by item type

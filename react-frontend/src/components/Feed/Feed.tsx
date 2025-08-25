@@ -83,6 +83,10 @@ export default function Feed() {
                     </div>
                 )}
             </div>
+            <div className="feed-title">
+                <h1>Feed</h1>
+                <div className="feed-title-underline"></div>
+            </div>
             <div className="feed-content">
                 {isLoading && <p>Loading posts...</p>}
                 {error && <p className="error">{error}</p>}
