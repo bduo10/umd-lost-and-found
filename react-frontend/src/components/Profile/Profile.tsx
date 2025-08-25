@@ -2,6 +2,7 @@ import './Profile.css'
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import UserFeed from '../Feed/UserFeed';
 
 interface ProfileProps {
     username: string; 
@@ -127,6 +128,9 @@ export default function Profile({ username }: ProfileProps) {
                     </div>
                 )}
             </div>
+            
+            {/* User's posts feed */}
+            <UserFeed username={username} isCurrentUser={isCurrentUser} />
         </div>
     );
 }

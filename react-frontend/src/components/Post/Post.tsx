@@ -3,15 +3,132 @@ import type { PostProps } from '../../types/post';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+interface PostEditFormProps {
+    initialContent: string;
+    initialItemType: string;
+    onSave: (content: string, itemType: string) => void;
+    onCancel: () => void;
+}
+
+function PostEditForm({ initialContent, initialItemType, onSave, onCancel }: PostEditFormProps) {
+    const [content, setContent] = useState(initialContent);
+    const [itemType, setItemType] = useState(initialItemType);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (content.trim()) {
+            onSave(content.trim(), itemType);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="post-edit-form">
+            <div className="form-group">
+                <label htmlFor="itemType">Item Type:</label>
+                <select 
+                    id="itemType"
+                    value={itemType} 
+                    onChange={(e) => setItemType(e.target.value)}
+                    required
+                >
+                    <option value="LOST">Lost</option>
+                    <option value="FOUND">Found</option>
+                </select>
+            </div>
+            <div className="form-group">
+                <label htmlFor="content">Description:</label>
+                <textarea
+                    id="content"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    required
+                    rows={4}
+                    placeholder="Describe the item..."
+                />
+            </div>
+            <div className="form-actions">
+                <button type="submit" className="save-btn">Save</button>
+                <button type="button" className="cancel-btn" onClick={onCancel}>Cancel</button>
+            </div>
+        </form>
+    );
+}
+
 export default function Post(post: PostProps) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [showEditForm, setShowEditForm] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     const handleUserClick = () => {
         navigate(`/profile/${post.username}`);
+    };
+
+    const handleDelete = async () => {
+        if (!window.confirm('Are you sure you want to delete this post?')) {
+            return;
+        }
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch(`${BASE_URL}/api/v1/posts/${post.id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete post');
+            }
+
+            if (post.onPostDeleted) {
+                post.onPostDeleted(post.id);
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            alert('Failed to delete post. Please try again.');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleEdit = () => {
+        setShowEditForm(true);
+    };
+
+    const handleEditCancel = () => {
+        setShowEditForm(false);
+    };
+
+    const handleEditSave = async (updatedContent: string, updatedItemType: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/v1/posts/${post.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    content: updatedContent,
+                    itemType: updatedItemType,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update post');
+            }
+
+            const updatedPost = await response.json();
+            if (post.onPostUpdated) {
+                post.onPostUpdated(updatedPost);
+            }
+            setShowEditForm(false);
+        } catch (error) {
+            console.error('Error updating post:', error);
+            alert('Failed to update post. Please try again.');
+        }
     };
 
     const getUserInitial = () => {
@@ -90,7 +207,37 @@ export default function Post(post: PostProps) {
                     </span>
                 </div>
                 <p className="post-description">{post.content}</p>
+                
+                {post.showEditDelete && (
+                    <div className="post-actions">
+                        <button 
+                            className="edit-btn" 
+                            onClick={handleEdit}
+                            disabled={isDeleting}
+                        >
+                            Edit
+                        </button>
+                        <button 
+                            className="delete-btn" 
+                            onClick={handleDelete}
+                            disabled={isDeleting}
+                        >
+                            {isDeleting ? 'Deleting...' : 'Delete'}
+                        </button>
+                    </div>
+                )}
             </div>
+
+            {showEditForm && (
+                <div className="edit-form">
+                    <PostEditForm 
+                        initialContent={post.content}
+                        initialItemType={post.itemType}
+                        onSave={handleEditSave}
+                        onCancel={handleEditCancel}
+                    />
+                </div>
+            )}
         </div>
     );
 }

@@ -108,16 +108,23 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(
+    public ResponseEntity<PostDto> updatePost(
         @PathVariable Integer id, 
-        @RequestBody Integer userId,
         @RequestBody Post postDetails) {
         try {
-            if (!postService.isPostOwner(id, userId)) {
+            User currentUser = getCurrUser();
+            if (!postService.isPostOwner(id, currentUser.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-            Post updatedPost = postService.updatePost(id, postDetails, userId);
-            return ResponseEntity.ok(updatedPost);
+            Post updatedPost = postService.updatePost(id, postDetails, currentUser.getId());
+            PostDto postDto = new PostDto(
+                updatedPost.getId(),
+                updatedPost.getUser().getUsername(),
+                updatedPost.getItemType().name(),
+                updatedPost.getContent(),
+                updatedPost.getImage() != null && updatedPost.getImage().length > 0
+            );
+            return ResponseEntity.ok(postDto);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -149,8 +156,16 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+        try {
+            User currentUser = getCurrUser();
+            if (!postService.isPostOwner(id, currentUser.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            postService.deletePost(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
