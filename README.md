@@ -15,7 +15,7 @@ A secure lost-and-found web application for the University of Maryland community
 - **Frontend**: React + TypeScript + Vite
 - **Backend**: Spring Boot + Spring Security  
 - **Database**: Supabase (PostgreSQL)
-- **Authentication**: HttpOnly cookies w/ SameSite + Secure
+- **Authentication**: HttpOnly cookies + SameSite + Secure
 
 ## Security Features
 
