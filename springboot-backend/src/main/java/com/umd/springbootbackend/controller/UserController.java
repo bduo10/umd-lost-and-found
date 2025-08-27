@@ -7,10 +7,10 @@ import com.umd.springbootbackend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -49,5 +49,18 @@ public class UserController {
                 user.getUsername()
         );
         return ResponseEntity.ok(userDto);
+    }
+
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<UserDto>> getUsersByIds(@RequestBody List<Long> userIds) {
+        List<User> users = userService.getUsersByIds(userIds);
+        List<UserDto> userDtos = users.stream()
+                .map(user -> new UserDto(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getUsername()
+                ))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDtos);
     }
 }

@@ -1,5 +1,6 @@
 export interface PostProps {
     id: number;
+    userId?: number;
     username?: string;
     itemType: string;
     content: string;

@@ -119,6 +119,7 @@ public class PostController {
             Post updatedPost = postService.updatePost(id, postDetails, currentUser.getId());
             PostDto postDto = new PostDto(
                 updatedPost.getId(),
+                updatedPost.getUser().getId(),
                 updatedPost.getUser().getUsername(),
                 updatedPost.getItemType().name(),
                 updatedPost.getContent(),

@@ -2,6 +2,8 @@ import './Post.css';
 import type { PostProps } from '../../types/post';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { ChatWindow } from '../Chat/ChatWindow';
 
 interface PostEditFormProps {
     initialContent: string;
@@ -59,7 +61,9 @@ export default function Post(post: PostProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [showEditForm, setShowEditForm] = useState<boolean>(false);
+    const [showChat, setShowChat] = useState<boolean>(false);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -208,6 +212,18 @@ export default function Post(post: PostProps) {
                 </div>
                 <p className="post-description">{post.content}</p>
                 
+                {/* Contact Owner button - show only if user is logged in and not viewing their own post */}
+                {user && user.id !== post.userId && (
+                    <div className="post-contact">
+                        <button 
+                            className="contact-owner-button" 
+                            onClick={() => setShowChat(true)}
+                        >
+                            Contact Owner
+                        </button>
+                    </div>
+                )}
+                
                 {post.showEditDelete && (
                     <div className="post-actions">
                         <button 
@@ -235,6 +251,17 @@ export default function Post(post: PostProps) {
                         initialItemType={post.itemType}
                         onSave={handleEditSave}
                         onCancel={handleEditCancel}
+                    />
+                </div>
+            )}
+
+            {showChat && post.userId && post.username && (
+                <div className="chat-overlay">
+                    <ChatWindow
+                        receiverId={post.userId}
+                        receiverName={post.username}
+                        postId={post.id.toString()}
+                        onClose={() => setShowChat(false)}
                     />
                 </div>
             )}

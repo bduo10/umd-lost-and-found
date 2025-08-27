@@ -26,6 +26,11 @@ export default function Navbar() {
           <li>
             <NavLink to="/feed">Feed</NavLink>
           </li>
+          {isAuthenticated && (
+            <li>
+              <NavLink to="/chat">Messages</NavLink>
+            </li>
+          )}
         </ul>
       </div>
       {isAuthenticated ? (

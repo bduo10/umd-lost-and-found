@@ -1,6 +1,7 @@
 package com.umd.springbootbackend.service;
 
 import javax.crypto.SecretKey;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.io.Decoders;

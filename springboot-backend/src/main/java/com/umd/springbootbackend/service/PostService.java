@@ -27,6 +27,7 @@ public class PostService {
                 .stream()
                 .map(post -> new PostDto(
                         post.getId(),
+                        post.getUser().getId(),
                         post.getUser().getUsername(),
                         post.getItemType().name(),
                         post.getContent(),
@@ -41,6 +42,7 @@ public class PostService {
                 .filter(post -> post.getUser().getUsername().equals(username))
                 .map(post -> new PostDto(
                         post.getId(),
+                        post.getUser().getId(),
                         post.getUser().getUsername(),
                         post.getItemType().name(),
                         post.getContent(),
@@ -84,10 +86,11 @@ public class PostService {
 
    // Get posts by user ID
    public List<PostDto> getPostsByUserId(Integer userId) {
-        return postRepository.findById(userId)
+        return postRepository.findByUserId(userId)
                 .stream()
                 .map(post -> new PostDto(
                         post.getId(),
+                        post.getUser().getId(),
                         post.getUser().getUsername(),
                         post.getItemType().name(),
                         post.getContent(),

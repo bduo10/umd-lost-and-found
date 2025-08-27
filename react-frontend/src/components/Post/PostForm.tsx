@@ -81,8 +81,8 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
 
     return (
         <div className="post-form-container">
-            <button className="close-button" onClick={onClose}>
-                 ← Back to Feed
+            <button className="back-to-feed-btn" onClick={onClose}>
+                ← Back to Feed
             </button>
             <form className="post-form" onSubmit={handleSubmit}>
                 <h2>Create New Post</h2>
@@ -91,7 +91,6 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
 
                 <div className="post-form-group">
                     <label htmlFor='itemType'>Item Type:</label>
-                    <br></br>
                     <select
                         id="itemType"
                         value={itemType}
@@ -113,7 +112,6 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
                 </div>
                 <div className="post-form-group">
                     <label htmlFor='content'>Content:</label>
-                    <br></br>
                     <textarea
                         id="content"
                         value={content}

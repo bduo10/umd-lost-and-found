@@ -141,8 +141,8 @@
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    align-items: stretch; /* Changed from center to stretch */
+    justify-content: flex-start; /* Changed from space-between to flex-start */
     margin: 2rem auto;
     padding: 2rem;
     background-color: white;
@@ -164,6 +164,29 @@
 
 .close-button:hover {
     background-color: #5a6268;
+}
+
+/* Specific styling for Back to Feed button */
+.back-to-feed-btn {
+    background-color: #e21833 !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    margin-bottom: 1.5rem !important;
+    align-self: flex-start !important;
+    transition: background-color 0.2s !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.back-to-feed-btn:hover {
+    background-color: #c41531 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
 .post-form {
@@ -195,8 +218,7 @@
 }
 
 .post-form-group select,
-.post-form-group textarea,
-.post-form-group input[type="file"] {
+.post-form-group textarea {
     width: 100%;
     padding: 0.75rem;
     border: 2px solid #ddd;
@@ -206,8 +228,37 @@
     transition: border-color 0.2s ease;
 }
 
+.post-form-group input[type="file"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+    background-color: white;
+    cursor: pointer;
+}
+
+.post-form-group input[type="file"]::-webkit-file-upload-button {
+    background-color: #e21833;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.post-form-group input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #c41531;
+}
+
 .post-form-group select:focus,
-.post-form-group textarea:focus {
+.post-form-group textarea:focus,
+.post-form-group input[type="file"]:focus {
     outline: none;
     border-color: #e21833;
     box-shadow: 0 0 0 2px rgba(226, 24, 51, 0.2);
@@ -370,7 +421,56 @@ button[type="submit"]:disabled {
     background-color: #5a6268;
 }
 
-/* Responsive Design */
+/* Contact Owner Button */
+.post-contact {
+    margin-top: 1rem;
+}
+
+.contact-owner-button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.contact-owner-button:hover {
+    background: #45a049;
+}
+
+.contact-owner-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Chat Overlay */
+.chat-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.chat-overlay .chat-window {
+    width: 100%;
+    max-width: 500px;
+    height: 600px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
 @media (max-width: 768px) {
     .post {
         padding: 1.5rem;
@@ -417,6 +517,13 @@ button[type="submit"]:disabled {
     .post-form-group input[type="file"] {
         font-size: 0.9rem;
         padding: 0.6rem;
+    }
+    
+    .chat-overlay .chat-window {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        border-radius: 0;
     }
 }
 

@@ -1,0 +1,38 @@
+/* Chat page styles - consistent with Feed styling */
+.chat-page {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.chat-page-container {
+  width: 100%;
+  border: 5px solid #ddd;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chat-page {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .chat-page-container {
+    border-width: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-page {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .chat-page-container {
+    border-width: 2px;
+  }
+}

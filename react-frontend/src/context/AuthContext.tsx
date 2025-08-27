@@ -51,6 +51,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (response.ok) {
                 const userData = await response.json();
                 setUser(userData);
+
+
                 console.log('Auth check successful:', userData);
             } else {
                 console.warn('Auth check failed with status:', response.status);
@@ -75,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             if (!response.ok) {
                 throw new Error('Login failed');
-            } 
+            }
 
             await checkAuth();
         } catch (error) {

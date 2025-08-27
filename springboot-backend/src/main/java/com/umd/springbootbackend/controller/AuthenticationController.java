@@ -4,7 +4,6 @@ import com.umd.springbootbackend.dto.LoginUserDto;
 import com.umd.springbootbackend.dto.RegisterUserDto;
 import com.umd.springbootbackend.dto.VerifyUserDto;
 import com.umd.springbootbackend.model.SecurityUser;
-import com.umd.springbootbackend.responses.LoginResponse;
 import com.umd.springbootbackend.service.AuthenticationService;
 import com.umd.springbootbackend.service.JwtService;
 import jakarta.servlet.http.Cookie;
@@ -30,22 +29,26 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(
+    public ResponseEntity<String> authenticate(
             @RequestBody LoginUserDto loginUserDto,
             HttpServletResponse response) {
         SecurityUser authenticatedUser = authenticationService.authenticate(loginUserDto);
+        
+        // Generate a standard JWT token for backend authentication (not Supabase-specific)
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
+        // Set HttpOnly cookie for secure authentication
         Cookie jwtCookie = new Cookie("auth-token", jwtToken);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false);
+        jwtCookie.setSecure(false); // Set to true in production with HTTPS
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge((int) jwtService.getExpirationTime() / 1000);
         jwtCookie.setAttribute("SameSite", "Strict");
 
         response.addCookie(jwtCookie);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+        
+        // Don't return JWT in response body for security (proxy pattern)
+        return ResponseEntity.ok("Login successful");
     }
 
     @PostMapping("/logout")

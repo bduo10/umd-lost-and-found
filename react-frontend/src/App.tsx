@@ -4,6 +4,7 @@ import Navbar from './components/Navbar/Navbar'
 import Feed from './components/Feed/Feed'
 import Login from './components/AuthForm/Login'
 import Register from './components/AuthForm/Register'
+import Chat from './components/Chat/Chat'
 import { Routes, Route, useParams } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
@@ -43,6 +44,11 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/profile/:username" element={<ProfileWrapper />} />
+          <Route path="/chat" element={
+            <ProtectedRoute requireAuth={true} redirectTo="/login">
+              <Chat />
+            </ProtectedRoute>
+          } />
 
           <Route path="/login" element={
             <ProtectedRoute requireAuth={false} redirectTo="/"> 

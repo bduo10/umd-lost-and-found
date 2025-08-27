@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.umd.springbootbackend.repo.UserRepository;
 import com.umd.springbootbackend.model.User;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -21,5 +23,9 @@ public class UserService {
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
+
+    public List<User> getUsersByIds(List<Long> userIds) {
+        return userRepository.findAllById(userIds.stream().map(Long::intValue).toList());
     }
 }
