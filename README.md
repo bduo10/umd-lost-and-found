@@ -75,7 +75,7 @@ npm install
 npm run dev
 ```
 
-**Access the app**: (https://umd-lost-and-found.vercel.app/)
+**Access the app**: https://umd-lost-and-found.vercel.app/
 
 
 ## Development
