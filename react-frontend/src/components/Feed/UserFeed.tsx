@@ -21,19 +21,41 @@ export default function UserFeed({ username, isCurrentUser }: UserFeedProps) {
     useEffect(() => {
         const fetchUserPosts = async () => {
             setIsLoading(true);
+            setError(null); // Clear any previous errors
             try {
                 const response = await fetch(`${BASE_URL}/api/v1/posts/user/${username}`, {
                     method: 'GET',
                     credentials: 'include',
                 });
+                
                 if (!response.ok) {
-                    throw new Error('Failed to fetch user posts');
+                    // If it's a 404 or similar, just show empty posts
+                    if (response.status === 404) {
+                        setPosts([]);
+                        return;
+                    }
+                    throw new Error(`Failed to fetch user posts: ${response.status}`);
                 }
-                const posts = await response.json();
-                setPosts(posts);
+                
+                // Check if response has content before parsing JSON
+                const text = await response.text();
+                if (!text.trim()) {
+                    // Empty response, set empty array
+                    setPosts([]);
+                    return;
+                }
+                
+                try {
+                    const posts = JSON.parse(text);
+                    // Ensure posts is an array
+                    setPosts(Array.isArray(posts) ? posts : []);
+                } catch (jsonError) {
+                    // JSON parse error, likely empty or malformed response
+                    setPosts([]);
+                }
             } catch (error) {
-                console.error('Error fetching user posts:', error);
-                setError('Failed to fetch posts');
+                setError('Failed to load posts. Please try again later.');
+                setPosts([]); // Set empty array as fallback
             } finally {
                 setIsLoading(false);
             }

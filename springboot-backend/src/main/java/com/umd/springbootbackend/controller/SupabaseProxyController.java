@@ -3,6 +3,8 @@ package com.umd.springbootbackend.controller;
 import com.umd.springbootbackend.dto.MessageDto;
 import com.umd.springbootbackend.model.SecurityUser;
 import com.umd.springbootbackend.service.SupabaseProxyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.util.Map;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"}, allowCredentials = "true")
 public class SupabaseProxyController {
 
+    private static final Logger logger = LoggerFactory.getLogger(SupabaseProxyController.class);
+    
     private final SupabaseProxyService supabaseProxyService;
 
     public SupabaseProxyController(SupabaseProxyService supabaseProxyService) {
@@ -32,7 +36,8 @@ public class SupabaseProxyController {
             MessageDto createdMessage = supabaseProxyService.createMessage(messageDto);
             return ResponseEntity.ok(createdMessage);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            logger.error("Error creating message", e);
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to create message"));
         }
     }
 
@@ -42,17 +47,14 @@ public class SupabaseProxyController {
             Authentication authentication) {
         try {
             Long currentUserId = getCurrentUserId(authentication);
-            System.out.println("=== GET MESSAGES REQUEST ===");
-            System.out.println("Current User ID: " + currentUserId);
-            System.out.println("Conversation User ID: " + conversationUserId);
+            logger.debug("Retrieving messages for conversation");
             
             List<MessageDto> messages = supabaseProxyService.getMessages(currentUserId, conversationUserId);
-            System.out.println("Controller: Found " + messages.size() + " messages");
+            logger.debug("Retrieved {} messages", messages.size());
             return ResponseEntity.ok(messages);
         } catch (Exception e) {
-            System.err.println("Controller error in getMessages: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            logger.error("Error retrieving messages", e);
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to retrieve messages"));
         }
     }
 
@@ -65,7 +67,8 @@ public class SupabaseProxyController {
             supabaseProxyService.markMessageAsRead(messageId, currentUserId);
             return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            logger.error("Error marking message as read", e);
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to mark message as read"));
         }
     }
 
@@ -76,7 +79,8 @@ public class SupabaseProxyController {
             List<Map<String, Object>> conversations = supabaseProxyService.getConversations(currentUserId);
             return ResponseEntity.ok(conversations);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            logger.error("Error retrieving conversations", e);
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to retrieve conversations"));
         }
     }
 

@@ -17,15 +17,31 @@ public class UserService {
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new RuntimeException("User not found")); // ✅ Generic message
     }
 
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found")); // ✅ Generic message
     }
 
     public List<User> getUsersByIds(List<Long> userIds) {
         return userRepository.findAllById(userIds.stream().map(Long::intValue).toList());
+    }
+
+    public void deleteUser(Integer userId) {
+        if (userId == null || userId <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+        User user = getUserById(userId); // This throws exception if not found
+        userRepository.delete(user);
+    }
+
+    public void deleteUserByUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid username");
+        }
+        User user = getUserByUsername(username); // This throws exception if not found
+        userRepository.delete(user);
     }
 }

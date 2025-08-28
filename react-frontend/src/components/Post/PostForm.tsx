@@ -60,7 +60,6 @@ export default function PostForm({ onClose, onPostCreated }: PostFormProps ) {
             }
 
             const newPost = await response.json();
-            console.log('Post created:', newPost);
 
             setItemType('');
             setContent('');

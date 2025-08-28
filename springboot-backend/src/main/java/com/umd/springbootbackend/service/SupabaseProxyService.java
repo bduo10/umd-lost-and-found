@@ -3,6 +3,8 @@ package com.umd.springbootbackend.service;
 import com.umd.springbootbackend.dto.MessageDto;
 import com.umd.springbootbackend.model.User;
 import com.umd.springbootbackend.repo.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import java.util.*;
 
 @Service
 public class SupabaseProxyService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SupabaseProxyService.class);
 
     @Value("${supabase.url}")
     private String supabaseUrl;
@@ -56,16 +60,11 @@ public class SupabaseProxyService {
     }
 
     public List<MessageDto> getMessages(Long currentUserId, Long conversationUserId) {
-        // Try a simpler query first to debug
         String url = supabaseUrl + "/rest/v1/messages" +
                 "?or=(sender_id.eq." + currentUserId + ",receiver_id.eq." + currentUserId + ")" +
                 "&order=created_at.asc";
         
-        System.out.println("=== FETCHING MESSAGES FROM SUPABASE ===");
-        System.out.println("Current User ID: " + currentUserId);
-        System.out.println("Conversation User ID: " + conversationUserId);
-        System.out.println("Simplified Supabase URL: " + url);
-        System.out.println("(Note: Fetching ALL messages for user " + currentUserId + " for debugging)");
+        logger.debug("Fetching messages for conversation between users");
         
         HttpHeaders headers = createHeaders();
         HttpEntity<String> request = new HttpEntity<>(headers);
@@ -73,8 +72,7 @@ public class SupabaseProxyService {
         try {
             ResponseEntity<Object[]> response = restTemplate.exchange(url, HttpMethod.GET, request, Object[].class);
             
-            System.out.println("Supabase response status: " + response.getStatusCode());
-            System.out.println("Supabase response body length: " + (response.getBody() != null ? response.getBody().length : "null"));
+            logger.debug("Received response from Supabase with status: {}", response.getStatusCode());
             
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 List<MessageDto> messages = new ArrayList<>();
@@ -86,21 +84,20 @@ public class SupabaseProxyService {
                     if ((dto.getSenderId().equals(currentUserId) && dto.getReceiverId().equals(conversationUserId)) ||
                         (dto.getSenderId().equals(conversationUserId) && dto.getReceiverId().equals(currentUserId))) {
                         messages.add(dto);
-                        System.out.println("Included message: " + dto.getId() + " - " + dto.getContent());
+                        logger.debug("Message included in conversation");
                     } else {
-                        System.out.println("Excluded message: " + dto.getId() + " (not part of this conversation)");
+                        logger.debug("Message excluded from conversation filter");
                     }
                 }
-                System.out.println("Total messages found for conversation: " + messages.size());
+                logger.debug("Retrieved {} messages for conversation", messages.size());
                 return messages;
             } else {
-                System.err.println("Failed to fetch messages - Status: " + response.getStatusCode());
+                logger.error("Failed to fetch messages - Status: {}", response.getStatusCode());
                 throw new RuntimeException("Failed to fetch messages");
             }
         } catch (Exception e) {
-            System.err.println("Error fetching messages: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Error fetching messages: " + e.getMessage(), e);
+            logger.error("Error fetching messages", e);
+            throw new RuntimeException("Error fetching messages", e);
         }
     }
 
@@ -166,7 +163,7 @@ public class SupabaseProxyService {
                                 otherUserName = otherUser.getUsername();
                             }
                         } catch (Exception e) {
-                            System.err.println("Error fetching user name for ID " + otherUserId + ": " + e.getMessage());
+                            logger.error("Error fetching user name for ID {}: {}", otherUserId, e.getMessage());
                         }
                         
                         Map<String, Object> conversation = new HashMap<>();
@@ -211,20 +208,43 @@ public class SupabaseProxyService {
         if (createdAt != null) {
             try {
                 String timestampStr = createdAt.toString();
-                System.out.println("Parsing timestamp: " + timestampStr);
+                logger.debug("Parsing timestamp for message");
                 
                 // Parse ISO 8601 timestamp with timezone and convert to LocalDateTime
                 java.time.OffsetDateTime offsetDateTime = java.time.OffsetDateTime.parse(timestampStr);
                 dto.setCreatedAt(offsetDateTime.toLocalDateTime());
                 
-                System.out.println("Parsed timestamp successfully: " + dto.getCreatedAt());
+                logger.debug("Timestamp parsed successfully");
             } catch (Exception e) {
-                System.err.println("Error parsing timestamp '" + createdAt + "': " + e.getMessage());
+                logger.warn("Error parsing timestamp, using current time as fallback");
                 // Fallback to current time if parsing fails
                 dto.setCreatedAt(java.time.LocalDateTime.now());
             }
         }
         
         return dto;
+    }
+
+    public void deleteUserMessages(Long userId) {
+        try {
+            // Delete all messages where user is sender
+            String senderUrl = supabaseUrl + "/rest/v1/messages?sender_id=eq." + userId;
+            HttpHeaders headers = createHeaders();
+            HttpEntity<String> senderRequest = new HttpEntity<>(headers);
+            
+            restTemplate.exchange(senderUrl, HttpMethod.DELETE, senderRequest, String.class);
+            
+            // Delete all messages where user is receiver
+            String receiverUrl = supabaseUrl + "/rest/v1/messages?receiver_id=eq." + userId;
+            HttpEntity<String> receiverRequest = new HttpEntity<>(headers);
+            
+            restTemplate.exchange(receiverUrl, HttpMethod.DELETE, receiverRequest, String.class);
+            
+            logger.info("Successfully deleted messages for user account cleanup");
+                
+        } catch (Exception e) {
+            logger.error("Error deleting messages during user cleanup", e);
+            // Don't throw exception - allow user deletion to continue even if message deletion fails
+        }
     }
 }

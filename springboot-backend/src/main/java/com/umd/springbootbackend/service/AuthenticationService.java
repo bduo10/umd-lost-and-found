@@ -7,6 +7,8 @@ import com.umd.springbootbackend.model.SecurityUser;
 import com.umd.springbootbackend.model.User;
 import com.umd.springbootbackend.repo.UserRepository;
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,8 @@ import java.util.Random;
 
 @Service
 public class AuthenticationService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+    
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -52,20 +56,27 @@ public class AuthenticationService {
     }
 
     public SecurityUser authenticate(LoginUserDto input) {
-        User user = userRepository.findByUsername(input.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + input.getUsername()));
+        try {
+            User user = userRepository.findByUsername(input.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        if (!user.isEnabled()) {
-            throw new RuntimeException("User is not verified");
+            if (!user.isEnabled()) {
+                throw new RuntimeException("Account not verified");
+            }
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            input.getUsername(),
+                            input.getPassword()
+                    )
+            );
+            
+            logger.info("User authentication successful");
+            return new SecurityUser(user);
+        } catch (Exception e) {
+            logger.warn("Authentication failed");
+            throw e;
         }
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        input.getUsername(),
-                        input.getPassword()
-                )
-        );
-        return new SecurityUser(user);
     }
 
     public void verifyUser(VerifyUserDto input) {

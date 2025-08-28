@@ -55,6 +55,11 @@
     margin: 0;
 }
 
+.profile-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
 .create-post-btn {
     background-color: #e21833;
     color: white;
@@ -70,6 +75,29 @@
 
 .create-post-btn:hover {
     background-color: #b71c1c;
+}
+
+.delete-account-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.delete-account-btn:hover {
+    background-color: #c82333;
+}
+
+.delete-account-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* Loading and error states */

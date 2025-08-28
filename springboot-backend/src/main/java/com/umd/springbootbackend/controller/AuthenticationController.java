@@ -40,7 +40,7 @@ public class AuthenticationController {
         // Set HttpOnly cookie for secure authentication
         Cookie jwtCookie = new Cookie("auth-token", jwtToken);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false); // Set to true in production with HTTPS
+        jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge((int) jwtService.getExpirationTime() / 1000);
         jwtCookie.setAttribute("SameSite", "Strict");

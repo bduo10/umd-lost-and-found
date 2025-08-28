@@ -41,7 +41,7 @@ export const ChatList: React.FC = () => {
 
     loadConversations();
 
-    let interval: NodeJS.Timeout;
+    let interval: number;
 
     const startPolling = () => {
       // TODO: Replace polling with WebSocket real-time updates in production

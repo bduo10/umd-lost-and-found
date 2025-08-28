@@ -16,6 +16,7 @@ interface AuthContextType {
     verifyEmail: (email: string, verificationCode: string) => Promise<void>;
     resendVerificationCode: (email: string) => Promise<void>;
     logout: () => void;
+    clearUserState: () => void;
     checkAuth: () => Promise<void>;
 }
 
@@ -39,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser ] = useState<User | null>(null);
     const [isLoading, setIsLoading ] = useState<boolean>(true);
 
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
     
     const checkAuth = async () => {
         try {
@@ -49,17 +50,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
 
             if (response.ok) {
-                const userData = await response.json();
-                setUser(userData);
-
-
-                console.log('Auth check successful:', userData);
+                // Check if response has content before parsing JSON
+                const text = await response.text();
+                
+                if (!text.trim()) {
+                    setUser(null);
+                    return;
+                }
+                
+                try {
+                    const userData = JSON.parse(text);
+                    setUser(userData);
+                } catch (jsonError) {
+                    setUser(null);
+                }
             } else {
-                console.warn('Auth check failed with status:', response.status);
                 setUser(null);
             }
         } catch (error) {
-            console.error('Auth check failed:', error);
             setUser(null);
         } finally {
             setIsLoading(false);
@@ -74,14 +82,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 credentials: 'include',
                 body: JSON.stringify({ username, password }),
             });
-
+            
             if (!response.ok) {
                 throw new Error('Login failed');
             }
 
+            // Add a small delay to ensure cookie is set
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
             await checkAuth();
         } catch (error) {
-            console.error('Login failed:', error);
             throw error;
         }
     };
@@ -100,7 +110,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
             await checkAuth();
         } catch (error) {
-            console.error('Registration failed:', error);
             throw error;
         }
     };
@@ -120,7 +129,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             await checkAuth();
         } catch (error) {
-            console.error('Email verification failed:', error);
             throw error;
         }
     };
@@ -138,7 +146,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 throw new Error('Resend verification email failed');
             }
         } catch (error) {
-            console.error('Resend verification email failed:', error);
             throw error;
         }
     };
@@ -150,11 +157,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 credentials: 'include'
             });
         } catch (error) {
-            console.error('Logout error:', error);
+            // Ignore logout errors - still clear state
         } finally {
             setUser(null);
+            // Note: No need to clear localStorage/sessionStorage since auth uses httpOnly cookies
+            // The backend logout endpoint already clears the auth-token cookie
         }
     }
+
+    const clearUserState = () => {
+        setUser(null);
+        setIsLoading(false);
+    };
 
     useEffect(() => {
         checkAuth();
@@ -169,6 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         verifyEmail,
         resendVerificationCode,
         logout,
+        clearUserState,
         checkAuth,
     };
 

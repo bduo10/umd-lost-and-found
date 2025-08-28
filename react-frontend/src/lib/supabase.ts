@@ -16,30 +16,6 @@
  * - ✅ Easy auditing: All operations logged in backend
  */
 
-// Keep Supabase client ONLY for potential real-time features
-// In production, consider implementing real-time via WebSockets instead
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-// This client could be used for real-time features, but all CRUD goes through backend proxy
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
-});
-
 // Backend API base URL
 const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
 
@@ -47,10 +23,6 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
 export const messageAPI = {
   // Send a new message
   async sendMessage(receiverId: number, content: string): Promise<Message> {
-    console.log('=== SENDING MESSAGE ===');
-    console.log('Receiver ID:', receiverId);
-    console.log('Content:', content);
-    
     const response = await fetch(`${BASE_URL}/api/v1/supabase/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,26 +34,17 @@ export const messageAPI = {
       }),
     });
 
-    console.log('Response status:', response.status);
-    console.log('Response ok:', response.ok);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Send message error response:', errorText);
-      throw new Error(`Failed to send message: ${response.status} - ${errorText}`);
+      console.error('Failed to send message');
+      throw new Error(`Failed to send message: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Send message success:', result);
     return result;
   },
 
   // Get messages for a conversation
   async getMessages(conversationUserId: number): Promise<Message[]> {
-    console.log('=== FETCHING MESSAGES ===');
-    console.log('Conversation User ID:', conversationUserId);
-    console.log('URL:', `${BASE_URL}/api/v1/supabase/messages?conversationUserId=${conversationUserId}`);
-    
     const response = await fetch(
       `${BASE_URL}/api/v1/supabase/messages?conversationUserId=${conversationUserId}`,
       {
@@ -90,17 +53,12 @@ export const messageAPI = {
       }
     );
 
-    console.log('Get messages response status:', response.status);
-    console.log('Get messages response ok:', response.ok);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Get messages error response:', errorText);
-      throw new Error(`Failed to fetch messages: ${response.status} - ${errorText}`);
+      console.error('Failed to fetch messages');
+      throw new Error(`Failed to fetch messages: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Get messages success:', result);
     return result;
   },
 

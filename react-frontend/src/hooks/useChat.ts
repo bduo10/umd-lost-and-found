@@ -74,7 +74,7 @@ export const useChat = (conversationUserId?: number): UseChat => {
     
     if (!user || !conversationUserId) return;
 
-    let interval: NodeJS.Timeout;
+    let interval: number;
 
     const startPolling = () => {
       interval = setInterval(() => {

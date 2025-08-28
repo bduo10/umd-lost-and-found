@@ -21,19 +21,53 @@ export default function Feed() {
     useEffect(() => {
         const fetchPosts = async () => {
             setIsLoading(true);
+            setError(null); // Clear any previous errors
             try {
+                // Add timeout to detect hanging requests
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+                
                 const response = await fetch(`${BASE_URL}/api/v1/posts/all`, {
                     method: 'GET',
                     credentials: 'include',
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
+                
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    // If it's a 404 or similar, just show empty posts
+                    if (response.status === 404) {
+                        setPosts([]);
+                        return;
+                    }
+                    throw new Error(`Failed to fetch posts: ${response.status}`);
                 }
-                const posts = await response.json();
-                setPosts(posts);
+                
+                // Check if response has content before parsing JSON
+                const text = await response.text();
+                
+                if (!text.trim()) {
+                    // Empty response, set empty array
+                    setPosts([]);
+                    return;
+                }
+                
+                try {
+                    const posts = JSON.parse(text);
+                    // Ensure posts is an array
+                    setPosts(Array.isArray(posts) ? posts : []);
+                } catch (jsonError) {
+                    // JSON parse error, likely empty or malformed response
+                    setPosts([]);
+                }
             } catch (error) {
-                console.error('Error fetching posts:', error);
-                setError('Failed to fetch posts');
+                if ((error as Error).name === 'AbortError') {
+                    setError('Request timed out. Please check your connection.');
+                } else {
+                    setError('Failed to load posts. Please try again later.');
+                }
+                setPosts([]);
             } finally {
                 setIsLoading(false);
             }

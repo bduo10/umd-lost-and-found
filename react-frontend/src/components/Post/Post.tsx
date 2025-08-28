@@ -33,8 +33,16 @@ function PostEditForm({ initialContent, initialItemType, onSave, onCancel }: Pos
                     onChange={(e) => setItemType(e.target.value)}
                     required
                 >
-                    <option value="LOST">Lost</option>
-                    <option value="FOUND">Found</option>
+                    <option value="BOOK">Book</option>
+                    <option value="CLOTHING">Clothing</option>
+                    <option value="ELECTRONICS">Electronics</option>
+                    <option value="KEYS">Keys</option>
+                    <option value="WALLET">Wallet</option>
+                    <option value="ID">ID Card</option>
+                    <option value="WATERBOTTLE">Water Bottle</option>
+                    <option value="ACCESSORIES">Accessories</option>
+                    <option value="BAGS">Bags</option>
+                    <option value="OTHER">Other</option>
                 </select>
             </div>
             <div className="form-group">
