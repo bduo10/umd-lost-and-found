@@ -43,7 +43,7 @@ public class AuthenticationController {
         jwtCookie.setSecure(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge((int) jwtService.getExpirationTime() / 1000);
-        jwtCookie.setAttribute("SameSite", "Strict");
+        jwtCookie.setAttribute("SameSite", "None");
 
         response.addCookie(jwtCookie);
         
@@ -58,7 +58,7 @@ public class AuthenticationController {
         jwtCookie.setSecure(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
-        jwtCookie.setAttribute("SameSite", "Strict");
+        jwtCookie.setAttribute("SameSite", "None");
 
         response.addCookie(jwtCookie);
         return ResponseEntity.ok("logout successful");
