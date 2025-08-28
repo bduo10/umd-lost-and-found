@@ -1,12 +1,12 @@
 # UMD Lost and Found
-
+[link]: https://umd-lost-and-found.vercel.app/
 A secure lost-and-found web application for the University of Maryland community. Students, faculty, and staff can post lost/found items and coordinate returns through secure messaging.
 
 ## Features
 
 - **Post Management**: Create, browse, and manage lost/found item posts with photos
 - **Secure Chat**: Direct messaging between posters and finders
-- **Smart Search**: Filter by item type, date, and other criteria
+- **Search**: Filter by item type, date, and other criteria
 - **User Profiles**: View posting history and build community trust
 - **Mobile Friendly**: Responsive design for all devices
 
