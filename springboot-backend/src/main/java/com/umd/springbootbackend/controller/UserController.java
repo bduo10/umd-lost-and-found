@@ -114,7 +114,7 @@ public class UserController {
             Cookie authCookie = new Cookie("auth-token", null);
             authCookie.setPath("/");
             authCookie.setHttpOnly(true);
-            authCookie.setSecure(false); // Set to true in production with HTTPS
+            authCookie.setSecure(true); // Set to true in production with HTTPS
             authCookie.setMaxAge(0);
             response.addCookie(authCookie);
             

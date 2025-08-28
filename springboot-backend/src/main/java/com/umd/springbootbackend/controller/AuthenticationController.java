@@ -40,7 +40,7 @@ public class AuthenticationController {
         // Set HttpOnly cookie for secure authentication
         Cookie jwtCookie = new Cookie("auth-token", jwtToken);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false);
+        jwtCookie.setSecure(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge((int) jwtService.getExpirationTime() / 1000);
         jwtCookie.setAttribute("SameSite", "Strict");
@@ -55,7 +55,7 @@ public class AuthenticationController {
     public ResponseEntity<String> logout(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("auth-token", "");
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false);
+        jwtCookie.setSecure(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
         jwtCookie.setAttribute("SameSite", "Strict");
