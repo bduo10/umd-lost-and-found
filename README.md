@@ -2,6 +2,8 @@
 
 A secure lost-and-found web application for the University of Maryland community. Students, faculty, and staff can post lost/found items and coordinate returns through secure messaging.
 
+**Access the app**: https://umd-lost-and-found.vercel.app/
+
 ## Features
 
 - **Post Management**: Create, browse, and manage lost/found item posts with photos
@@ -74,9 +76,6 @@ cd react-frontend
 npm install
 npm run dev
 ```
-
-**Access the app**: https://umd-lost-and-found.vercel.app/
-
 
 ## Development
 
