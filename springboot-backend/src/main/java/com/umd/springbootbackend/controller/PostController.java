@@ -71,7 +71,6 @@ public class PostController {
     public ResponseEntity<List<PostDto>> getPostsByItemType(@PathVariable String itemType) {
         try { 
             List<Post> posts = postService.getPostsByItemType(itemType);
-            // ✅ Convert to DTOs
             List<PostDto> postDtos = posts.stream()
                 .map(post -> new PostDto(
                     post.getId(),
@@ -123,7 +122,6 @@ public class PostController {
         post.setContent(content);
         try {
             Post createdPost = postService.createPost(post, userId, imageFile);
-            // ✅ Convert to DTO before returning
             PostDto postDto = new PostDto(
                 createdPost.getId(),
                 createdPost.getUser().getId(),
@@ -180,7 +178,6 @@ public class PostController {
             postDetails.setContent(content);
             Post updatedPost = postService.updatePostWithImage(id, postDetails, currentUser.getId(), imageFile);
             
-            // ✅ Convert to DTO
             PostDto postDto = new PostDto(
                 updatedPost.getId(),
                 updatedPost.getUser().getId(),
