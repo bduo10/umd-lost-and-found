@@ -4,6 +4,10 @@ A secure lost-and-found web application for the University of Maryland community
 
 **Access the app**: https://umd-lost-and-found.vercel.app/
 
+**Front Page**: 
+<img width="1909" height="903" alt="image" src="https://github.com/user-attachments/assets/94364187-595e-4f44-8a3b-3109a283fb41" />
+
+
 ## Features
 
 - **Post Management**: Create, browse, and manage lost/found item posts with photos
